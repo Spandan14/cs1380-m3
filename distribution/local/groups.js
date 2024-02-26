@@ -1,10 +1,5 @@
-const distribution = require('../../distribution');
+// const distribution = require('../../distribution');
 const id = require('../util/id');
-
-const allComm = require('../all/comm');
-const allGroups = require('../all/groups');
-const allStatus = require('../all/status');
-const allRoutes = require('../all/routes');
 // const allGossip = require('../all/gossip');
 
 let groups = {};
@@ -33,10 +28,10 @@ groups.put = function(groupName, group, callback) {
 
   // add services
   distribution[groupName] = {};
-  distribution[groupName].comm = allComm({gid: groupName});
-  distribution[groupName].groups = allGroups({gid: groupName});
-  distribution[groupName].status = allStatus({gid: groupName});
-  distribution[groupName].routes = allRoutes({gid: groupName});
+  distribution[groupName].comm = require('../all/comm')({gid: groupName});
+  distribution[groupName].groups = require('../all/groups')({gid: groupName});
+  distribution[groupName].status = require('../all/status')({gid: groupName});
+  distribution[groupName].routes = require('../all/routes')({gid: groupName});
   // distribution[groupName].gossip = allGossip({gid: groupName});
 
   callback(null, global.groupMapping[groupName]);

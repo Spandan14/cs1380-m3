@@ -1,9 +1,10 @@
-const localComm = require('../local/comm');
-const id = require('../util/id');
+// const localComm = require('../local/comm');
+// const id = require('../util/id');
 
 let comm = (config) => {
   let context = {};
   context.gid = config.gid || 'all';
+  const util = global.distribution.util;
 
   return {
     'send': function(payload, remote, callback) {
@@ -22,7 +23,7 @@ let comm = (config) => {
       let keys = Object.keys(group);
 
       // do swap so that we call on ourselves at the very end
-      let localIndex = keys.indexOf(id.getSID(global.nodeConfig));
+      let localIndex = keys.indexOf(util.id.getSID(global.nodeConfig));
       if (localIndex > -1) {
         let temp = keys[localIndex];
         keys[localIndex] = keys[keys.length - 1];
@@ -31,17 +32,20 @@ let comm = (config) => {
 
       for (let i = 0; i < keys.length; i++) {
         let node = group[keys[i]];
+        let nodeID = util.id.getSID(node);
 
         const commCallback = (err, value) => {
-          console.log('test callback??')
-          err ? errorMap[id.getSID(node)] = err :
-                valueMap[id.getSID(node)] = value;
+          if (err) {
+            errorMap[nodeID] = err;
+          } else {
+            valueMap[nodeID] = value;
+          }
         };
 
         let newRemote = remote;
         newRemote.node = node;
 
-        localComm.send(payload, newRemote, commCallback);
+        global.distribution.local.comm.send(payload, newRemote, console.log);
       }
 
       callback(errorMap, valueMap);

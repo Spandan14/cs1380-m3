@@ -1,5 +1,3 @@
-const distribution = require('../../distribution');
-
 let groups = (config) => {
   let context = {};
   context.gid = config.gid || 'all';
@@ -20,27 +18,46 @@ let groups = (config) => {
     'put': function(groupName, nodes, callback) {
       callback = callback || function() {};
 
-      global.groupMapping[groupName] = nodes;
+      // global.groupMapping[groupName] = nodes;
 
-      distribution[context.gid] = {};
-      distribution[context.gid].comm = require('../all/comm')({gid: groupName});
-      distribution[context.gid].groups =
-        require('../all/groups')({gid: groupName});
-      distribution[context.gid].status =
-        require('../all/status')({gid: groupName});
-      distribution[context.gid].routes =
-        require('../all/routes')({gid: groupName});
+      // distribution[context.gid] = {};
+      // distribution[context.gid].comm = require('../all/comm')
+      // ({gid: groupName});
+      // distribution[context.gid].groups =
+      //   require('../all/groups')({gid: groupName});
+      // distribution[context.gid].status =
+      //   require('../all/status')({gid: groupName});
+      // distribution[context.gid].routes =
+      //   require('../all/routes')({gid: groupName});
 
-      let payload = [groupName, nodes];
-      let remote = {
-        service: 'groups',
-        method: 'put',
-      };
+      // let payload = [groupName, nodes];
+      // let remote = {
+      //   service: 'groups',
+      //   method: 'put',
+      // };
 
-      // WARN: this will return an error on current node, but we MUST
-      // call put() locally first so that we can use this syntax
-      distribution[context.gid].comm.send(payload, remote, (e, v) =>
-        callback(e, v));
+      // // WARN: this will return an error on current node, but we MUST
+      // // call put() locally first so that we can use this syntax
+      // distribution[context.gid].comm.send(payload, remote, (e, v) =>
+      //   callback(e, v));
+
+      distribution.local.groups.put(groupName, nodes, (err, group) => {
+        if (err) {
+          callback(err, null);
+          return;
+        }
+
+        let payload = [groupName, group];
+        let remote = {
+          service: 'groups',
+          method: 'put',
+        };
+
+        // WARN: this will return an error on current node, but we MUST
+        // call put() locally first so that we can use this syntax
+        distribution[context.gid].comm.send(payload, remote, (e, v) =>
+          callback(e, v));
+      });
     },
     'del': function(groupName, callback) {
       callback = callback || function() {};

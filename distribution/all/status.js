@@ -1,5 +1,3 @@
-const distribution = require('../../distribution.js');
-
 let status = (config) => {
   let context = {};
   context.gid = config.gid || 'all';
