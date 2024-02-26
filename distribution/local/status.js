@@ -1,4 +1,8 @@
 const id = require('../util/id');
+const wire = require('../util/wire');
+const util = require('../util/util');
+const spawn = require('child_process').spawn;
+const path = require('path');
 
 const status = {};
 
@@ -24,5 +28,40 @@ status.get = function(configuration, callback) {
   }
 };
 
+status.stop = function(callback) {
+  callback = callback || function() {};
+
+  global.localServer.close();
+  setTimeout(process.exit, 100); // exit 100ms after calling callback
+  callback(null, 'Stopping server...');
+};
+
+status.spawn = function(configuration, callback) {
+  callback = callback || function() {};
+
+  // 1. create RPC from callback
+  let callbackRPC = wire.createRPC(util.wire.toAsync(callback));
+  if (configuration.onStart) {
+    let funcString = `
+      let onStart = ${configuration.onStart.toString()};
+      let callbackRPC = ${callbackRPC.toString()};
+      onStart();
+      callbackRPC();
+    `;
+    configuration.onStart = new Function(funcString);
+  } else {
+    configuration.onStart = callbackRPC;
+  }
+
+  // 2. spawn
+  let cwd = path.join(__dirname, '../../');
+  let distributionScript = './distribution.js';
+  let args = ['--config', util.serialize(configuration)];
+
+  // console.log('Spawning new node with command:', spawnCommand);
+  spawn(distributionScript, args, {cwd: cwd});
+  console.log('Spawned new node successfully!');
+  callback(null, 'Spawned new node');
+};
 
 module.exports = status;

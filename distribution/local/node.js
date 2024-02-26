@@ -92,7 +92,6 @@ const start = function(onStart) {
       body = serialization.deserialize(body);
       let args = body;
 
-
       /* Here, you can handle the service requests. */
 
       // Write some code...
@@ -104,17 +103,9 @@ const start = function(onStart) {
           return;
         }
 
-        /*
-      Here, we provide a default callback which will be passed to services.
-      It will be called by the service with the result of it's call
-      then it will serialize the result and send it back to the caller.
-        */
         const serviceCallback = (e, v) => {
           res.end(serialization.serialize([e, v]));
         };
-
-        // Write some code...
-
 
         console.log(`[SERVER] Args: ${JSON.stringify(args)} 
             ServiceCallback: ${serviceCallback}`);
@@ -124,18 +115,7 @@ const start = function(onStart) {
     });
   });
 
-
-  // Write some code...
-
-  /*
-    Your server will be listening on the port and ip specified in the config
-    You'll be calling the onStart callback when your server has successfully
-    started.
-
-    In this milestone, we'll be adding the ability to stop a node
-    remotely through the service interface.
-  */
-
+  global.localServer = server;
   server.listen(global.nodeConfig.port, global.nodeConfig.ip, () => {
     console.log(`Server running at http://${global.nodeConfig.ip}:${global.nodeConfig.port}/`);
     onStart(server);
