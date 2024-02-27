@@ -30,25 +30,39 @@ let comm = (config) => {
         keys[keys.length - 1] = temp;
       }
 
+      let nodes = [];
       for (let i = 0; i < keys.length; i++) {
         let node = group[keys[i]];
-        let nodeID = util.id.getSID(node);
+        nodes.push(node);
+      }
 
-        const commCallback = (err, value) => {
-          if (err) {
-            errorMap[nodeID] = err;
-          } else {
-            valueMap[nodeID] = value;
-          }
-        };
+      let i = 0;
+      const loopingCaller = (err, value) => {
+        let node = nodes[i]; // get old node to assign from
+        let key = util.id.getSID(node);
+        if (err) {
+          errorMap[key] = err;
+        }
+        if (value) {
+          valueMap[key] = value;
+        }
 
+        i++; // move onto next node
+        if (i >= nodes.length) {
+          callback(errorMap, valueMap);
+          return; // we're done
+        }
+        node = nodes[i];
         let newRemote = remote;
         newRemote.node = node;
 
-        global.distribution.local.comm.send(payload, newRemote, console.log);
-      }
+        global.distribution.local.comm.send(payload, newRemote, loopingCaller);
+      };
 
-      callback(errorMap, valueMap);
+      let node = nodes[i];
+      let newRemote = remote;
+      newRemote.node = node;
+      global.distribution.local.comm.send(payload, newRemote, loopingCaller);
     },
   };
 };

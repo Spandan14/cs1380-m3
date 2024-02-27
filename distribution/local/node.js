@@ -118,7 +118,12 @@ const start = function(onStart) {
   global.localServer = server;
   server.listen(global.nodeConfig.port, global.nodeConfig.ip, () => {
     console.log(`Server running at http://${global.nodeConfig.ip}:${global.nodeConfig.port}/`);
-    onStart(server);
+    console.log('Server Booting; please wait...');
+    setTimeout(() => {
+      console.log('Server Booted');
+      onStart(server);
+    }, 1000);
+    // console.log(global.localServer);
   });
 };
 

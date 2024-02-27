@@ -68,6 +68,14 @@ afterAll((done) => {
 test('(4 pts) all.comm.send(status.get(nid))', (done) => {
   const nids = Object.values(mygroupGroup).map((node) => id.getNID(node));
   const remote = {service: 'status', method: 'get'};
+  const remoteTwo = {service: 'status', method: 'get',
+    node: {ip: '127.0.0.1', port: 8001}};
+
+  distribution.local.comm.send(['nid'], remoteTwo, (e, v) => {
+    console.log(e, v);
+    expect(e).toEqual({});
+    expect(v).toBe(id.getNID(mygroupGroup[id.getSID(remoteTwo.node)]));
+  });
 
   distribution.mygroup.comm.send(['nid'], remote, (e, v) => {
     expect(e).toEqual({});

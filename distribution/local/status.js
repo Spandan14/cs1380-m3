@@ -31,9 +31,13 @@ status.get = function(configuration, callback) {
 status.stop = function(callback) {
   callback = callback || function() {};
 
-  global.localServer.close();
-  setTimeout(process.exit, 100); // exit 100ms after calling callback
+  // global.localServer.close(() => {
+  //   callback(null, 'Stopping server...');
+  //   setTimeout(process.exit, 100); // exit 100ms after calling callback
+  // });
+
   callback(null, 'Stopping server...');
+  process.exit();
 };
 
 status.spawn = function(configuration, callback) {
@@ -46,7 +50,7 @@ status.spawn = function(configuration, callback) {
       let onStart = ${configuration.onStart.toString()};
       let callbackRPC = ${callbackRPC.toString()};
       onStart();
-      callbackRPC();
+      callbackRPC(null, global.nodeConfig, () => {});
     `;
     configuration.onStart = new Function(funcString);
   } else {
@@ -54,14 +58,21 @@ status.spawn = function(configuration, callback) {
   }
 
   // 2. spawn
-  let cwd = path.join(__dirname, '../../');
-  let distributionScript = './distribution.js';
+  let cwd = path.join(__dirname, '../../distribution.js');
+  let distributionScript = 'node';
   let args = ['--config', util.serialize(configuration)];
 
   // console.log('Spawning new node with command:', spawnCommand);
-  spawn(distributionScript, args, {cwd: cwd});
-  console.log('Spawned new node successfully!');
-  callback(null, 'Spawned new node');
+  const child = spawn(distributionScript, [cwd, ...args]);
+
+  child.on('error', (err) => {
+    console.log('ERROR spawning new node:', err);
+    process.exit(-1);
+  });
+
+  child.stdout.on('data', (data) => {
+    console.log(`Child process stdout: ${data}`);
+  });
 };
 
 module.exports = status;
