@@ -1,4 +1,7 @@
 let routes = (config) => {
+  let context = {};
+  context.gid = config.gid || 'all';
+
   return {
     'put': function(route, name, callback) {
       callback = callback || function() {};

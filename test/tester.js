@@ -28,7 +28,7 @@ distribution.node.start((server) => {
         server.close();
       });
     });
-  }, 3000);
+  }, 1000);
 
   // remote = {node: n1, service: 'status', method: 'get'};
   // distribution.local.comm.send(['nid'], remote, (e, v) => {

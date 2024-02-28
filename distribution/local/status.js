@@ -54,7 +54,11 @@ status.spawn = function(configuration, callback) {
     `;
     configuration.onStart = new Function(funcString);
   } else {
-    configuration.onStart = callbackRPC;
+    let funcString = `
+      let callbackRPC = ${callbackRPC.toString()};
+      callbackRPC(null, global.nodeConfig, () => {});
+    `;
+    configuration.onStart = new Function(funcString);
   }
 
   // 2. spawn

@@ -68,14 +68,6 @@ afterAll((done) => {
 test('(4 pts) all.comm.send(status.get(nid))', (done) => {
   const nids = Object.values(mygroupGroup).map((node) => id.getNID(node));
   const remote = {service: 'status', method: 'get'};
-  const remoteTwo = {service: 'status', method: 'get',
-    node: {ip: '127.0.0.1', port: 8001}};
-
-  distribution.local.comm.send(['nid'], remoteTwo, (e, v) => {
-    console.log(e, v);
-    expect(e).toEqual({});
-    expect(v).toBe(id.getNID(mygroupGroup[id.getSID(remoteTwo.node)]));
-  });
 
   distribution.mygroup.comm.send(['nid'], remote, (e, v) => {
     expect(e).toEqual({});
@@ -85,129 +77,129 @@ test('(4 pts) all.comm.send(status.get(nid))', (done) => {
   });
 });
 
-// test('(2 pts) all.comm.send(status.get(random))', (done) => {
-//   const remote = {service: 'status', method: 'get'};
+test('(2 pts) all.comm.send(status.get(random))', (done) => {
+  const remote = {service: 'status', method: 'get'};
 
-//   distribution.mygroup.comm.send(['random'], remote, (e, v) => {
-//     Object.keys(mygroupGroup).forEach((sid) => {
-//       expect(e[sid]).toBeDefined();
-//       expect(e[sid]).toBeInstanceOf(Error);
-//     });
-//     expect(v).toEqual({});
-//     done();
-//   });
-// });
+  distribution.mygroup.comm.send(['random'], remote, (e, v) => {
+    Object.keys(mygroupGroup).forEach((sid) => {
+      expect(e[sid]).toBeDefined();
+      expect(e[sid]).toBeInstanceOf(Error);
+    });
+    expect(v).toEqual({});
+    done();
+  });
+});
 
 // // // ---all.GROUPS---
 
-// test('(2 pts) all.groups.del(random)', (done) => {
-//   distribution.mygroup.groups.del('random', (e, v) => {
-//     Object.keys(mygroupGroup).forEach((sid) => {
-//       expect(e[sid]).toBeDefined();
-//       expect(e[sid]).toBeInstanceOf(Error);
-//     });
-//     expect(v).toEqual({});
-//     done();
-//   });
-// });
+test('(2 pts) all.groups.del(random)', (done) => {
+  distribution.mygroup.groups.del('random', (e, v) => {
+    Object.keys(mygroupGroup).forEach((sid) => {
+      expect(e[sid]).toBeDefined();
+      expect(e[sid]).toBeInstanceOf(Error);
+    });
+    expect(v).toEqual({});
+    done();
+  });
+});
 
-// test('(2 pts) all.groups.put(browncs)', (done) => {
-//   let g = {
-//     '507aa': {ip: '127.0.0.1', port: 8080},
-//     '12ab0': {ip: '127.0.0.1', port: 8081},
-//   };
+test('(2 pts) all.groups.put(browncs)', (done) => {
+  let g = {
+    '507aa': {ip: '127.0.0.1', port: 8080},
+    '12ab0': {ip: '127.0.0.1', port: 8081},
+  };
 
-//   distribution.mygroup.groups.put('browncs', g, (e, v) => {
-//     expect(e).toEqual({});
-//     Object.keys(mygroupGroup).forEach((sid) => {
-//       expect(v[sid]).toEqual(g);
-//     });
-//     done();
-//   });
-// });
+  distribution.mygroup.groups.put('browncs', g, (e, v) => {
+    expect(e).toEqual({});
+    Object.keys(mygroupGroup).forEach((sid) => {
+      expect(v[sid]).toEqual(g);
+    });
+    done();
+  });
+});
 
-// test('(2 pts) all.groups.put/get(browncs)', (done) => {
-//   let g = {
-//     '507aa': {ip: '127.0.0.1', port: 8080},
-//     '12ab0': {ip: '127.0.0.1', port: 8081},
-//   };
+test('(2 pts) all.groups.put/get(browncs)', (done) => {
+  let g = {
+    '507aa': {ip: '127.0.0.1', port: 8080},
+    '12ab0': {ip: '127.0.0.1', port: 8081},
+  };
 
-//   distribution.mygroup.groups.put('browncs', g, (e, v) => {
-//     distribution.mygroup.groups.get('browncs', (e, v) => {
-//       expect(e).toEqual({});
-//       Object.keys(mygroupGroup).forEach((sid) => {
-//         expect(v[sid]).toEqual(g);
-//       });
-//       done();
-//     });
-//   });
-// });
+  distribution.mygroup.groups.put('browncs', g, (e, v) => {
+    distribution.mygroup.groups.get('browncs', (e, v) => {
+      expect(e).toEqual({});
+      Object.keys(mygroupGroup).forEach((sid) => {
+        expect(v[sid]).toEqual(g);
+      });
+      done();
+    });
+  });
+});
 
-// test('(2 pts) all.groups.put/get/del(browncs)', (done) => {
-//   let g = {
-//     '507aa': {ip: '127.0.0.1', port: 8080},
-//     '12ab0': {ip: '127.0.0.1', port: 8081},
-//   };
+test('(2 pts) all.groups.put/get/del(browncs)', (done) => {
+  let g = {
+    '507aa': {ip: '127.0.0.1', port: 8080},
+    '12ab0': {ip: '127.0.0.1', port: 8081},
+  };
 
-//   distribution.mygroup.groups.put('browncs', g, (e, v) => {
-//     distribution.mygroup.groups.get('browncs', (e, v) => {
-//       distribution.mygroup.groups.del('browncs', (e, v) => {
-//         expect(e).toEqual({});
-//         Object.keys(mygroupGroup).forEach((sid) => {
-//           expect(v[sid]).toEqual(g);
-//         });
-//         done();
-//       });
-//     });
-//   });
-// });
+  distribution.mygroup.groups.put('browncs', g, (e, v) => {
+    distribution.mygroup.groups.get('browncs', (e, v) => {
+      distribution.mygroup.groups.del('browncs', (e, v) => {
+        expect(e).toEqual({});
+        Object.keys(mygroupGroup).forEach((sid) => {
+          expect(v[sid]).toEqual(g);
+        });
+        done();
+      });
+    });
+  });
+});
 
-// test('(2 pts) all.groups.put/get/del/get(browncs)', (done) => {
-//   let g = {
-//     '507aa': {ip: '127.0.0.1', port: 8080},
-//     '12ab0': {ip: '127.0.0.1', port: 8081},
-//   };
+test('(2 pts) all.groups.put/get/del/get(browncs)', (done) => {
+  let g = {
+    '507aa': {ip: '127.0.0.1', port: 8080},
+    '12ab0': {ip: '127.0.0.1', port: 8081},
+  };
 
-//   distribution.mygroup.groups.put('browncs', g, (e, v) => {
-//     distribution.mygroup.groups.get('browncs', (e, v) => {
-//       distribution.mygroup.groups.del('browncs', (e, v) => {
-//         distribution.mygroup.groups.get('browncs', (e, v) => {
-//           expect(e).toBeDefined();
-//           Object.keys(mygroupGroup).forEach((sid) => {
-//             expect(e[sid]).toBeInstanceOf(Error);
-//           });
-//           expect(v).toEqual({});
-//           done();
-//         });
-//       });
-//     });
-//   });
-// });
+  distribution.mygroup.groups.put('browncs', g, (e, v) => {
+    distribution.mygroup.groups.get('browncs', (e, v) => {
+      distribution.mygroup.groups.del('browncs', (e, v) => {
+        distribution.mygroup.groups.get('browncs', (e, v) => {
+          expect(e).toBeDefined();
+          Object.keys(mygroupGroup).forEach((sid) => {
+            expect(e[sid]).toBeInstanceOf(Error);
+          });
+          expect(v).toEqual({});
+          done();
+        });
+      });
+    });
+  });
+});
 
-// test('(2 pts) all.groups.put(dummy)/add(n1)/get(dummy)', (done) => {
-//   let g = {
-//     '507aa': {ip: '127.0.0.1', port: 8080},
-//     '12ab0': {ip: '127.0.0.1', port: 8081},
-//   };
+test('(2 pts) all.groups.put(dummy)/add(n1)/get(dummy)', (done) => {
+  let g = {
+    '507aa': {ip: '127.0.0.1', port: 8080},
+    '12ab0': {ip: '127.0.0.1', port: 8081},
+  };
 
-//   distribution.mygroup.groups.put('dummy', g, (e, v) => {
-//     let n1 = {ip: '127.0.0.1', port: 8082};
+  distribution.mygroup.groups.put('dummy', g, (e, v) => {
+    let n1 = {ip: '127.0.0.1', port: 8082};
 
-//     distribution.mygroup.groups.add('dummy', n1, (e, v) => {
-//       let expectedGroup = {
-//         ...g, ...{[id.getSID(n1)]: n1},
-//       };
+    distribution.mygroup.groups.add('dummy', n1, (e, v) => {
+      let expectedGroup = {
+        ...g, ...{[id.getSID(n1)]: n1},
+      };
 
-//       distribution.mygroup.groups.get('dummy', (e, v) => {
-//         expect(e).toEqual({});
-//         Object.keys(mygroupGroup).forEach((sid) => {
-//           expect(v[sid]).toEqual(expectedGroup);
-//         });
-//         done();
-//       });
-//     });
-//   });
-// });
+      distribution.mygroup.groups.get('dummy', (e, v) => {
+        expect(e).toEqual({});
+        Object.keys(mygroupGroup).forEach((sid) => {
+          expect(v[sid]).toEqual(expectedGroup);
+        });
+        done();
+      });
+    });
+  });
+});
 
 // test('(2 pts) all.groups.put(dummy)/rem(n1)/get(dummy)', (done) => {
 //   let g = {
@@ -234,60 +226,60 @@ test('(4 pts) all.comm.send(status.get(nid))', (done) => {
 
 // // // ---all.ROUTES---
 
-// test('(2 pts) all.routes.put(echo)', (done) => {
-//   const echoService = {};
+test('(2 pts) all.routes.put(echo)', (done) => {
+  const echoService = {};
 
-//   echoService.echo = () => {
-//     return 'echo!';
-//   };
+  echoService.echo = () => {
+    return 'echo!';
+  };
 
-//   distribution.mygroup.routes.put(echoService, 'echo', (e, v) => {
-//     const n1 = {ip: '127.0.0.1', port: 8000};
-//     const n2 = {ip: '127.0.0.1', port: 8001};
-//     const n3 ={ip: '127.0.0.1', port: 8002};
-//     const r1 = {node: n1, service: 'routes', method: 'get'};
-//     const r2 = {node: n2, service: 'routes', method: 'get'};
-//     const r3 = {node: n3, service: 'routes', method: 'get'};
+  distribution.mygroup.routes.put(echoService, 'echo', (e, v) => {
+    const n1 = {ip: '127.0.0.1', port: 8000};
+    const n2 = {ip: '127.0.0.1', port: 8001};
+    const n3 ={ip: '127.0.0.1', port: 8002};
+    const r1 = {node: n1, service: 'routes', method: 'get'};
+    const r2 = {node: n2, service: 'routes', method: 'get'};
+    const r3 = {node: n3, service: 'routes', method: 'get'};
 
-//     distribution.local.comm.send(['echo'], r1, (e, v) => {
-//       expect(e).toBeFalsy();
-//       expect(v.echo()).toBe('echo!');
-//       distribution.local.comm.send(['echo'], r2, (e, v) => {
-//         expect(e).toBeFalsy();
-//         expect(v.echo()).toBe('echo!');
-//         distribution.local.comm.send(['echo'], r3, (e, v) => {
-//           expect(e).toBeFalsy();
-//           expect(v.echo()).toBe('echo!');
-//           done();
-//         });
-//       });
-//     });
-//   });
-// });
+    distribution.local.comm.send(['echo'], r1, (e, v) => {
+      expect(e).toBeFalsy();
+      expect(v.echo()).toBe('echo!');
+      distribution.local.comm.send(['echo'], r2, (e, v) => {
+        expect(e).toBeFalsy();
+        expect(v.echo()).toBe('echo!');
+        distribution.local.comm.send(['echo'], r3, (e, v) => {
+          expect(e).toBeFalsy();
+          expect(v.echo()).toBe('echo!');
+          done();
+        });
+      });
+    });
+  });
+});
 
 // // ---all.STATUS---
 
-// test('(2 pts) all.status.get(nid)', (done) => {
-//   const nids = Object.values(mygroupGroup).map((node) => id.getNID(node));
+test('(2 pts) all.status.get(nid)', (done) => {
+  const nids = Object.values(mygroupGroup).map((node) => id.getNID(node));
 
-//   distribution.mygroup.status.get('nid', (e, v) => {
-//     expect(e).toEqual({});
-//     expect(Object.values(v).length).toBe(nids.length);
-//     expect(Object.values(v)).toEqual(expect.arrayContaining(nids));
-//     done();
-//   });
-// });
+  distribution.mygroup.status.get('nid', (e, v) => {
+    expect(e).toEqual({});
+    expect(Object.values(v).length).toBe(nids.length);
+    expect(Object.values(v)).toEqual(expect.arrayContaining(nids));
+    done();
+  });
+});
 
-// test('(2 pts) all.status.get(random)', (done) => {
-//   distribution.mygroup.status.get('random', (e, v) => {
-//     Object.keys(mygroupGroup).forEach((sid) => {
-//       expect(e[sid]).toBeDefined();
-//       expect(e[sid]).toBeInstanceOf(Error);
-//     });
-//     expect(v).toEqual({});
-//     done();
-//   });
-// });
+test('(2 pts) all.status.get(random)', (done) => {
+  distribution.mygroup.status.get('random', (e, v) => {
+    Object.keys(mygroupGroup).forEach((sid) => {
+      expect(e[sid]).toBeDefined();
+      expect(e[sid]).toBeInstanceOf(Error);
+    });
+    expect(v).toEqual({});
+    done();
+  });
+});
 
 // test('(2 pts) all.status.spawn/stop()', (done) => {
 //   // Spawn a node
