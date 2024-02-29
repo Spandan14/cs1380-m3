@@ -201,28 +201,28 @@ test('(2 pts) all.groups.put(dummy)/add(n1)/get(dummy)', (done) => {
   });
 });
 
-// test('(2 pts) all.groups.put(dummy)/rem(n1)/get(dummy)', (done) => {
-//   let g = {
-//     '507aa': {ip: '127.0.0.1', port: 8080},
-//     '12ab0': {ip: '127.0.0.1', port: 8081},
-//   };
+test('(2 pts) all.groups.put(dummy)/rem(n1)/get(dummy)', (done) => {
+  let g = {
+    '507aa': {ip: '127.0.0.1', port: 8080},
+    '12ab0': {ip: '127.0.0.1', port: 8081},
+  };
 
-//   distribution.mygroup.groups.put('browncs', g, (e, v) => {
-//     distribution.mygroup.groups.rem('browncs', '507aa', (e, v) => {
-//       let expectedGroup = {
-//         '12ab0': {ip: '127.0.0.1', port: 8081},
-//       };
+  distribution.mygroup.groups.put('browncs', g, (e, v) => {
+    distribution.mygroup.groups.rem('browncs', '507aa', (e, v) => {
+      let expectedGroup = {
+        '12ab0': {ip: '127.0.0.1', port: 8081},
+      };
 
-//       distribution.mygroup.groups.get('browncs', (e, v) => {
-//         expect(e).toEqual({});
-//         Object.keys(mygroupGroup).forEach((sid) => {
-//           expect(v[sid]).toEqual(expectedGroup);
-//         });
-//         done();
-//       });
-//     });
-//   });
-// });
+      distribution.mygroup.groups.get('browncs', (e, v) => {
+        expect(e).toEqual({});
+        Object.keys(mygroupGroup).forEach((sid) => {
+          expect(v[sid]).toEqual(expectedGroup);
+        });
+        done();
+      });
+    });
+  });
+});
 
 // // // ---all.ROUTES---
 
@@ -281,53 +281,53 @@ test('(2 pts) all.status.get(random)', (done) => {
   });
 });
 
-// test('(2 pts) all.status.spawn/stop()', (done) => {
-//   // Spawn a node
-//   const nodeToSpawn = {ip: '127.0.0.1', port: 8008};
+test('(2 pts) all.status.spawn/stop()', (done) => {
+  // Spawn a node
+  const nodeToSpawn = {ip: '127.0.0.1', port: 8008};
 
-//   // Spawn the node
-//   distribution.mygroup.status.spawn(nodeToSpawn, (e, v) => {
-//     expect(e).toBeFalsy();
-//     expect(v.ip).toEqual(nodeToSpawn.ip);
-//     expect(v.port).toEqual(nodeToSpawn.port);
+  // Spawn the node
+  distribution.mygroup.status.spawn(nodeToSpawn, (e, v) => {
+    expect(e).toBeFalsy();
+    expect(v.ip).toEqual(nodeToSpawn.ip);
+    expect(v.port).toEqual(nodeToSpawn.port);
 
-//     remote = {node: nodeToSpawn, service: 'status', method: 'get'};
-//     message = [
-//       'nid', // configuration
-//     ];
+    remote = {node: nodeToSpawn, service: 'status', method: 'get'};
+    message = [
+      'nid', // configuration
+    ];
 
-//     // Ping the node, it should respond
-//     distribution.local.comm.send(message, remote, (e, v) => {
-//       expect(e).toBeFalsy();
-//       expect(v).toBe(id.getNID(nodeToSpawn));
+    // Ping the node, it should respond
+    distribution.local.comm.send(message, remote, (e, v) => {
+      expect(e).toBeFalsy();
+      expect(v).toBe(id.getNID(nodeToSpawn));
 
-//       distribution.local.groups.get('mygroup', (e, v) => {
-//         expect(e).toBeFalsy();
-//         expect(v[id.getSID(nodeToSpawn)]).toBeDefined();
+      distribution.local.groups.get('mygroup', (e, v) => {
+        expect(e).toBeFalsy();
+        expect(v[id.getSID(nodeToSpawn)]).toBeDefined();
 
-//         remote = {node: nodeToSpawn, service: 'status', method: 'stop'};
+        remote = {node: nodeToSpawn, service: 'status', method: 'stop'};
 
-//         // Stop the node
-//         distribution.local.comm.send([], remote, (e, v) => {
-//           expect(e).toBeFalsy();
-//           expect(v.ip).toEqual(nodeToSpawn.ip);
-//           expect(v.port).toEqual(nodeToSpawn.port);
+        // Stop the node
+        distribution.local.comm.send([], remote, (e, v) => {
+          expect(e).toBeFalsy();
+          expect(v.ip).toEqual(nodeToSpawn.ip);
+          expect(v.port).toEqual(nodeToSpawn.port);
 
-//           remote = {node: nodeToSpawn, service: 'status', method: 'get'};
+          remote = {node: nodeToSpawn, service: 'status', method: 'get'};
 
-//           // Ping the node again, it shouldn't respond
-//           distribution.local.comm.send(message,
-//               remote, (e, v) => {
-//                 expect(e).toBeDefined();
-//                 expect(e).toBeInstanceOf(Error);
-//                 expect(v).toBeFalsy();
-//                 done();
-//               });
-//         });
-//       });
-//     });
-//   });
-// });
+          // Ping the node again, it shouldn't respond
+          distribution.local.comm.send(message,
+              remote, (e, v) => {
+                expect(e).toBeDefined();
+                expect(e).toBeInstanceOf(Error);
+                expect(v).toBeFalsy();
+                done();
+              });
+        });
+      });
+    });
+  });
+});
 
 // // ---all.GOSSIP---
 

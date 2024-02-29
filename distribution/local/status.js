@@ -36,7 +36,7 @@ status.stop = function(callback) {
   //   setTimeout(process.exit, 100); // exit 100ms after calling callback
   // });
 
-  callback(null, 'Stopping server...');
+  callback(null, global.nodeConfig);
   process.exit();
 };
 

@@ -41,6 +41,7 @@ let comm = (config) => {
         let node = nodes[i]; // get old node to assign from
         let key = util.id.getSID(node);
         if (err) {
+          console.log('ERROR', err, key, node);
           errorMap[key] = err;
         }
         if (value) {

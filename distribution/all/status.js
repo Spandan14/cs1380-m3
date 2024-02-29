@@ -41,14 +41,18 @@ let status = (config) => {
     'spawn': function(configuration, callback) {
       callback = callback || function() {};
 
-      local.status.spawn(configuration, (err, value) => {
+      distribution.local.status.spawn(configuration, (err, value) => {
         if (err) {
           callback(err, null);
           return;
         }
 
-        distribution[context.gid].groups.add(context.gid, configuration);
-        callback(null, value);
+        distribution.local.groups.add(context.gid, configuration, (e, v) => {
+          distribution[context.gid].groups.add(context.gid, configuration,
+              (e, v) => {
+                callback(null, value);
+              });
+        });
       });
     },
   };
