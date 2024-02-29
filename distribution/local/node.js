@@ -138,9 +138,10 @@ const start = function(onStart) {
 
   server.listen(global.nodeConfig.port, global.nodeConfig.ip, () => {
     console.log(`Server running at http://${global.nodeConfig.ip}:${global.nodeConfig.port}/`);
-    setTimeout(() => {
-      onStart(server);
-    }, 100);
+    onStart(server);
+    // setTimeout(() => {
+    //   onStart(server);
+    // }, 100);
   });
 };
 
