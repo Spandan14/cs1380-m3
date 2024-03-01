@@ -83,11 +83,6 @@ let groups = (config) => {
       };
 
       distribution.local.groups.rem(groupName, sid, (err, group) => {
-        if (err) {
-          callback(err, null);
-          return;
-        }
-
         distribution[context.gid].comm.send(payload, remote, (e, v) =>
           callback(e, v));
       });
