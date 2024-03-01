@@ -92,11 +92,6 @@ const start = function(onStart) {
       body = serialization.deserialize(body);
       let args = body;
 
-
-      /* Here, you can handle the service requests. */
-
-      // Write some code...
-
       local.routes.get(service, (error, service) => {
         if (error) {
           res.end(serialization.serialize(error));
@@ -104,17 +99,9 @@ const start = function(onStart) {
           return;
         }
 
-        /*
-      Here, we provide a default callback which will be passed to services.
-      It will be called by the service with the result of it's call
-      then it will serialize the result and send it back to the caller.
-        */
         const serviceCallback = (e, v) => {
           res.end(serialization.serialize([e, v]));
         };
-
-        // Write some code...
-
 
         console.log(`[SERVER] Args: ${JSON.stringify(args)} 
             ServiceCallback: ${serviceCallback}`);

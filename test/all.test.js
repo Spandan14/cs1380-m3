@@ -329,29 +329,29 @@ test('(2 pts) all.status.spawn/stop()', (done) => {
   });
 });
 
-// // ---all.GOSSIP---
+// ---all.GOSSIP---
 
-// test('(6 pts) all.gossip.send()', (done) => {
-//   distribution.mygroup.groups.put('newgroup', {}, (e, v) => {
-//     let newNode = {ip: '127.0.0.1', port: 4444};
-//     let message = [
-//       'newgroup',
-//       newNode,
-//     ];
+test('(6 pts) all.gossip.send()', (done) => {
+  distribution.mygroup.groups.put('newgroup', {}, (e, v) => {
+    let newNode = {ip: '127.0.0.1', port: 4444};
+    let message = [
+      'newgroup',
+      newNode,
+    ];
 
-//     let remote = {service: 'groups', method: 'add'};
-//     distribution.mygroup.gossip.send(message, remote, (e, v) => {
-//       distribution.mygroup.groups.get('newgroup', (e, v) => {
-//         let count = 0;
-//         for (const k in v) {
-//           if (Object.keys(v[k]).length > 0) {
-//             count++;
-//           }
-//         }
-//         /* Gossip only provides weak guarantees */
-//         expect(count).toBeGreaterThanOrEqual(2);
-//         done();
-//       });
-//     });
-//   });
-// });
+    let remote = {service: 'groups', method: 'add'};
+    distribution.mygroup.gossip.send(message, remote, (e, v) => {
+      distribution.mygroup.groups.get('newgroup', (e, v) => {
+        let count = 0;
+        for (const k in v) {
+          if (Object.keys(v[k]).length > 0) {
+            count++;
+          }
+        }
+        /* Gossip only provides weak guarantees */
+        expect(count).toBeGreaterThanOrEqual(2);
+        done();
+      });
+    });
+  });
+});

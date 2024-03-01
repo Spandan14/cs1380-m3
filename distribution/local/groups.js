@@ -38,7 +38,7 @@ groups.put = function(groupName, group, callback) {
   distribution[groupName].groups = require('../all/groups')({gid: groupName});
   distribution[groupName].status = require('../all/status')({gid: groupName});
   distribution[groupName].routes = require('../all/routes')({gid: groupName});
-  // distribution[groupName].gossip = require(...);
+  distribution[groupName].gossip = require('../all/gossip')({gid: groupName});
 
   callback(null, global.groupMapping[groupName]);
 };
