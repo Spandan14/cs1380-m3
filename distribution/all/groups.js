@@ -45,9 +45,10 @@ let groups = (config) => {
         method: 'del',
       };
 
-      // WARN: may not work, but lets try
-      distribution[context.gid].comm.send(payload, remote, (e, v) =>
-        callback(e, v));
+      distribution.local.groups.del(groupName, (err, group) => {
+        distribution[context.gid].comm.send(payload, remote, (e, v) =>
+          callback(e, v));
+      });
     },
     'add': function(groupName, node, callback) {
       // WARN: adding to a group randomly will not just work,
@@ -62,8 +63,15 @@ let groups = (config) => {
         method: 'add',
       };
 
-      distribution[context.gid].comm.send(payload, remote, (e, v) =>
-        callback(e, v));
+      distribution.local.groups.add(groupName, node, (err, group) => {
+        if (err) {
+          callback(err, null);
+          return;
+        }
+
+        distribution[context.gid].comm.send(payload, remote, (e, v) =>
+          callback(e, v));
+      });
     },
     'rem': function(groupName, sid, callback) {
       callback = callback || function() {};
@@ -74,8 +82,15 @@ let groups = (config) => {
         method: 'rem',
       };
 
-      distribution[context.gid].comm.send(payload, remote, (e, v) =>
-        callback(e, v));
+      distribution.local.groups.rem(groupName, sid, (err, group) => {
+        if (err) {
+          callback(err, null);
+          return;
+        }
+
+        distribution[context.gid].comm.send(payload, remote, (e, v) =>
+          callback(e, v));
+      });
     },
   };
 };
