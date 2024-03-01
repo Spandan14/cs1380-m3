@@ -12,7 +12,7 @@ groups.get = function(groupName, callback) {
   if (groupName in global.groupMapping) {
     callback(null, global.groupMapping[groupName]);
   } else {
-    callback(Error('group not found', null));
+    callback(Error('group not found, groups.get', null));
   }
 };
 
@@ -52,7 +52,7 @@ groups.del = function(groupName, callback) {
     delete distribution[groupName];
     callback(null, group);
   } else {
-    callback(Error('group not found', null));
+    callback(Error('group not found, groups.del', null));
   }
 };
 
@@ -63,7 +63,7 @@ groups.add = function(groupName, node, callback) {
     global.groupMapping[groupName][id.getSID(node)] = node;
     callback(null, 'node added');
   } else {
-    callback(Error('group not found', null));
+    callback(Error('group not found, groups.add', null));
   }
 };
 
@@ -77,7 +77,7 @@ groups.rem = function(groupName, sid, callback) {
     }
     callback(null, 'node removed');
   } else {
-    callback(Error('group not found', null));
+    callback(Error('group not found, groups.rem', null));
   }
 };
 

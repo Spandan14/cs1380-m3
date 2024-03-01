@@ -69,6 +69,19 @@ let gossip = (config) => {
       global.distribution.local.comm.send(gossipPayload, gossipRemote,
           loopingGossiper);
     },
+    'at': function(delay, method, callback) {
+      callback = callback || function() {};
+
+      // run method every delay milliseconds
+      let intervalID = setInterval(method, delay);
+      callback(null, intervalID);
+    },
+    'del': function(intervalID, callback) {
+      callback = callback || function() {};
+
+      clearInterval(intervalID);
+      callback(null, intervalID);
+    },
   };
 };
 
